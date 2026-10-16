@@ -18,7 +18,7 @@ setup:
 
 # 2. Run the main extraction pipeline inside the venv
 run:
-	$(BIN)/python src/main_extract.py
+	$(BIN)/python src/main.py
 
 # 3. Clean up virtual environment and python cache files
 clean:
