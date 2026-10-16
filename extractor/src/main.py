@@ -5,7 +5,7 @@ from japan import Orchestrator
 
 
 async def main():
-    async with Orchestrator(output=Path("japan_tariffs")) as orchestrator:
+    async with Orchestrator(output=Path("japan")) as orchestrator:
         await orchestrator.download()
 
 if __name__ == "__main__":

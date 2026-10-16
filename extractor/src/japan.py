@@ -1,4 +1,5 @@
 import asyncio
+import io
 from pathlib import Path
 
 import httpx
@@ -31,7 +32,8 @@ async def fetch_html(client: httpx.AsyncClient, url: str) -> bytes | None:
 
 def html_to_df(html: bytes) -> pd.DataFrame | None:
     try:
-        tables = pd.read_html(html.decode("utf-8-sig", errors="ignore"), flavor="lxml")
+        html_str = html.decode("utf-8-sig", errors="ignore")
+        tables = pd.read_html(io.StringIO(html_str), flavor="lxml")
     except ValueError:
         print("No HTML <table> tags found on page.")
         return None
@@ -55,6 +57,7 @@ class Orchestrator:
         self.semaphore = asyncio.Semaphore(clients)
         self.client: httpx.AsyncClient | None = None # initialization is async
         self.output = output
+        self.output.mkdir(parents=True, exist_ok=True)
 
     async def __aenter__(self):
         self.client = httpx.AsyncClient(timeout=10.0)
@@ -65,21 +68,18 @@ class Orchestrator:
             await self.client.aclose()
 
 
-    # async of one network request, have retries and such
-    async def chapter(self, url: str, retries: int = 3) -> pd.DataFrame | None:
+    # one direct network request
+    async def chapter(self, url: str) -> pd.DataFrame | None:
         assert self.client is not None, "Orchestrator must be used as an async context manager."
 
-        for attempt in range(1, retries + 1):
-            async with self.semaphore:
-                html = await fetch_html(self.client, url)
+        async with self.semaphore:
+            html = await fetch_html(self.client, url)
 
-            if html is not None:
-                return await asyncio.to_thread(html_to_df, html)
-
-            if attempt < retries:
-                await asyncio.sleep(1.0 * attempt)
+        if html is not None:
+            return await asyncio.to_thread(html_to_df, html)
 
         return None
+
 
     # lazy, create tasks to the async scheduler
     async def schedule(self, template: str, retries: int = 3) -> pd.DataFrame | None:
