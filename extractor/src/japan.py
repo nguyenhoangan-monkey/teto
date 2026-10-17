@@ -121,21 +121,29 @@ class Orchestrator:
 
 
     # manage folders, I/O and status
-    async def download(self) -> None:
+    async def download(self, force = False) -> None:
         from config import JapanCustoms
 
         for date, template in JapanCustoms.english_schedules():
-            print(f"\nProcessing schedule {date} ---")
+            file_path = self.output / f"{date}.csv"
+            if file_path.exists() and file_path.stat().st_size > 0 and not force:
+                print(f"Skipping schedule {date}: Already exists ({file_path})")
+                continue
 
+            print(f"\nProcessing schedule {date} --- ", end="")
             df = await self.schedule(template)
 
             if df is None:
                 print(f"No chapter files found to merge for {date}.")
                 continue
 
-            file_path = self.output / f"{date}.csv"
+            # write to temp ensures we write one complete file at a time
+            tmp_file_path = self.output / f"{date}.csv.tmp"
             try:
-                df.to_csv(file_path, index=False, encoding="utf-8-sig")
+                await asyncio.to_thread(df.to_csv, tmp_file_path, index=False, encoding="utf-8-sig")
+                tmp_file_path.replace(file_path)
                 print(f"Saved {date} ({len(df)} rows)")
             except OSError as e:
                 print(f"Failed to write file to {file_path} - {e}")
+                if tmp_file_path.exists():
+                    tmp_file_path.unlink()
