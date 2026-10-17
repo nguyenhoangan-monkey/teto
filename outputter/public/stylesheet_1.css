@@ -1,0 +1,125 @@
+#BottomNavWebPart_Cntnr {
+  padding-top: 0;
+  padding-bottom: 2px;
+  padding-left: 5px;
+}
+#BottomNavWebPart_Cntnr .VerticalSeprt {
+  display: inline;
+  font-size: 16px;
+}
+#BottomNavWebPart_TermsCntnr {
+  float: right;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 15px;
+}
+#BottomNavWebPart_TermsCntnr .TermsTxt {
+  color: #000;
+  font-size: 11px;
+}
+#BottomNavWebPart_LnksCntnr {
+  display: inline;
+}
+#BottomNavWebPart_LnksCntnr .BottomNavLnk {
+  display: inline-block;
+  padding: 3px 7px;
+}
+@media screen and (max-width: 950px) {
+  #BottomNavWebPart_LnksCntnr .BottomNavLnk {
+    padding: 3px 4px;
+  }
+}
+button::-moz-focus-inner {
+  border: 0;
+  padding: 1px;
+}
+.Clear {
+  clear: both;
+}
+.no-touch .ai:hover {
+  color: #000;
+  background-color: #ffffb5;
+}
+.no-touch .BottomNavLnk:hover {
+  background-color: #ffffb5;
+  text-decoration: underline;
+}
+@-moz-document url-prefix() {
+  html {
+    overflow: -moz-hidden-unscrollable !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+.ShellLayout_MainContent_ProdPage_Loaded {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+@media only screen and (device-width: 768px) {
+  #ShellLayout_MainIFrame_Cntnr {
+    height: auto;
+  }
+  #MainIFrame {
+    height: 1135px !important;
+  }
+  @media (orientation: landscape) {
+    #MainIFrame {
+      height: 600px !important;
+    }
+  }
+}
+div.WebToolsetToolWebPart_RightmostTool_Cntnr {
+  border-right: 0;
+  margin-right: 0;
+  padding-right: 0;
+}
+.clearDiv {
+  clear: both;
+  line-height: 0;
+  height: 0;
+}
+@-moz-document url-prefix() {
+  .clearDiv {
+    height: 100%;
+  }
+}
+.ai:hover {
+  color: #000;
+  background-color: #ffffb5;
+  text-decoration: underline;
+}
+#MastheadLoginWebPartLayout_LoginWebPartCntnr {
+  width: 300px;
+  padding: 1px 0 0 7px;
+}
+#MastheadLoginInner {
+  z-index: 10000;
+  background: #fff;
+  padding: 5px 4px 5px 5px;
+}
+.MastheadLoginInner_Hide {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    visibility 0s ease-out 0.15s,
+    opacity 0.15s ease-out;
+}
+#MastheadLoginWebPartLayout_ClosBtn {
+  position: relative;
+  z-index: 5;
+  float: right;
+  margin-right: 0;
+  margin-top: 0;
+}
+#MastheadLoginInner_Content {
+  background: #fff;
+  position: relative;
+  z-index: 4;
+  display: inline-block;
+}
+.ai:hover {
+  cursor: pointer;
+}
