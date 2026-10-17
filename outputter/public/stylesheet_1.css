@@ -33,9 +33,6 @@ button::-moz-focus-inner {
   border: 0;
   padding: 1px;
 }
-.Clear {
-  clear: both;
-}
 .no-touch .ai:hover {
   color: #000;
   background-color: #ffffb5;
@@ -90,35 +87,6 @@ div.WebToolsetToolWebPart_RightmostTool_Cntnr {
   color: #000;
   background-color: #ffffb5;
   text-decoration: underline;
-}
-#MastheadLoginWebPartLayout_LoginWebPartCntnr {
-  width: 300px;
-  padding: 1px 0 0 7px;
-}
-#MastheadLoginInner {
-  z-index: 10000;
-  background: #fff;
-  padding: 5px 4px 5px 5px;
-}
-.MastheadLoginInner_Hide {
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    visibility 0s ease-out 0.15s,
-    opacity 0.15s ease-out;
-}
-#MastheadLoginWebPartLayout_ClosBtn {
-  position: relative;
-  z-index: 5;
-  float: right;
-  margin-right: 0;
-  margin-top: 0;
-}
-#MastheadLoginInner_Content {
-  background: #fff;
-  position: relative;
-  z-index: 4;
-  display: inline-block;
 }
 .ai:hover {
   cursor: pointer;
