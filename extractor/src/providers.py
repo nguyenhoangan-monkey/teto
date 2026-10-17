@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from typing import ClassVar
 
 
@@ -64,14 +65,30 @@ class JapanCustoms:
         "2008_01_01": "2008/data/print_{chap:02d}.htm",
         "2007_04_01": "2007_4/data/print_{chap:02d}.htm",
     }
-    @classmethod
-    def english_schedules(cls):
-        for date, path in cls._SCHEDULES.items():
-            yield date, cls._ENGLISH_BASE + path
+    @staticmethod
+    def name() -> str:
+        return "Japan Customs tariff schedules"
 
     @classmethod
-    def japanese_schedules(cls):
-        # japanese version
-        # https://www.customs.go.jp/tariff/2003/data/print_01.htm
-        # https://www.customs.go.jp/tariff/2024_04_01/data/print_j_01.htm
-        pass
+    def url(cls) -> str:
+        return cls._ENGLISH_BASE
+
+    @classmethod
+    def schedules(cls) -> list[tuple[str, str]]:
+        schedules = []
+        for date, path in cls._SCHEDULES.items():
+            full_url = cls._ENGLISH_BASE + path
+            schedules.append((date, full_url))
+
+        return schedules
+
+    # gives a mapping of chapters and urls
+    @staticmethod
+    def get_urls(template: str) -> dict[int, str]:
+        def hs_chapter():
+            for ch in range(1, 98):
+                if ch == 77:  # Reserved by WCO for future use
+                    continue
+                yield ch
+
+        return {ch: template.format(chap=ch) for ch in hs_chapter()}
