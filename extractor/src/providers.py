@@ -1,6 +1,19 @@
-from collections.abc import Generator
-from typing import ClassVar
+from typing import ClassVar, Protocol
 
+
+class TariffProvider(Protocol):
+    @staticmethod
+    def name() -> str:
+        ...
+    @classmethod
+    def source(cls) -> str:
+        ...
+    @classmethod
+    def schedules(cls) -> list[tuple[str, str]]:
+        ...
+    @staticmethod
+    def get_chapters(template: str) -> dict[int, str]:
+        ...
 
 class JapanCustoms:
     _ENGLISH_BASE: ClassVar = "https://www.customs.go.jp/english/tariff/"
@@ -70,7 +83,7 @@ class JapanCustoms:
         return "Japan Customs tariff schedules"
 
     @classmethod
-    def url(cls) -> str:
+    def source(cls) -> str:
         return cls._ENGLISH_BASE
 
     @classmethod
@@ -84,7 +97,7 @@ class JapanCustoms:
 
     # gives a mapping of chapters and urls
     @staticmethod
-    def get_urls(template: str) -> dict[int, str]:
+    def get_chapters(template: str) -> dict[int, str]:
         def hs_chapter():
             for ch in range(1, 98):
                 if ch == 77:  # Reserved by WCO for future use
@@ -92,3 +105,42 @@ class JapanCustoms:
                 yield ch
 
         return {ch: template.format(chap=ch) for ch in hs_chapter()}
+
+class VietnamCustoms:
+    # hardcoded to my machine for now
+    _COMPUTER_BASE: ClassVar = "/Users/nguyenhoangan/Documents/cptpp/teto/extractor/data/raw/vietnam/"
+    _SCHEDULES: ClassVar = {
+        "2015_01_01": "XNK2015-incomplete.xlsx",
+        "2016_01_01": "XNK2016.xlsx",
+        "2017_01_01": "XNK2017.xls",
+        "2018_01_01": "XNK2018.xlsx",
+        "2019_01_01": "XNK2019.xlsx",
+        "2020_01_01": "XNK2020.xlsx",
+        "2021_01_01": "XNK2021.xlsx",
+        "2022_01_01": "XNK2022.xlsx",
+        "2023_01_01": "XNK2023.xlsx",
+        "2024_01_01": "XNK2024.xlsx",
+        "2025_01_01": "XNK2025.xlsx",
+        "2026_01_01": "XNK2026.xlsx"
+    }
+    @staticmethod
+    def name() -> str:
+        return "Vietnam Customs tariff schedules"
+
+    @classmethod
+    def source(cls) -> str:
+        return "on my computer"
+
+    @classmethod
+    def schedules(cls) -> list[tuple[str, str]]:
+        schedules = []
+        for date, path in cls._SCHEDULES.items():
+            full_url = cls._COMPUTER_BASE + path
+            schedules.append((date, full_url))
+
+        return schedules
+
+    # doesn't exist
+    @staticmethod
+    def get_chapters():
+        pass

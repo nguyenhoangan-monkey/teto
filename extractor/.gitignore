@@ -8,7 +8,6 @@ __pycache__/
 *.py[cod]
 
 # Output files
-*.csv
 *.xlsx
 
 data/raw/

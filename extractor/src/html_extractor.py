@@ -2,11 +2,12 @@ import asyncio
 import io
 import logging
 from pathlib import Path
-from typing import Protocol
 
 import httpx
 import pandas as pd
 from tqdm.asyncio import tqdm
+
+from providers import TariffProvider
 
 logger = logging.getLogger(__name__)
 
@@ -65,22 +66,6 @@ def display_path(file_path: Path):
     except ValueError:
         return file_path.name
 
-
-class TariffProvider(Protocol):
-    @staticmethod
-    def name() -> str:
-        ...
-    @classmethod
-    def url(cls) -> str:
-        ...
-    @classmethod
-    def schedules(cls) -> list[tuple[str, str]]:
-        ...
-    @staticmethod
-    def get_urls(template: str) -> dict[int, str]:
-        ...
-
-
 class Orchestrator:
     def __init__(self, provider: type[TariffProvider], clients: int = 10):
         self.provider = provider
@@ -122,7 +107,7 @@ class Orchestrator:
     async def schedule(self, date:str, template: str, retries: int = 3) -> pd.DataFrame | None:
         assert self.client is not None, "Orchestrator must be used as an async context manager."
 
-        urls_to_download = self.provider.get_urls(template)
+        urls_to_download = self.provider.get_chapters(template)
         downloaded_df: dict[int, pd.DataFrame] = {}
 
         for attempt in range(1, retries + 1):
@@ -162,7 +147,7 @@ class Orchestrator:
         output_path = Path(output)
         output_path.mkdir(parents=True, exist_ok=True)
 
-        logger.info("Downloading %s at %s ---", self.provider.name(), self.provider.url())
+        logger.info("Downloading %s at %s ---", self.provider.name(), self.provider.source())
 
         for date, template in self.provider.schedules():
             file_path = output_path / f"{date}.csv"
